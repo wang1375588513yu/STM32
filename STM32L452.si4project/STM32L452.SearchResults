@@ -1,0 +1,385 @@
+---- TDR Matches (56 in 10 files) ----
+{anonUSART_TypeDef} in stm32l452xx.h (Source\System\inc) : 
+  uint16_t  RESERVED4;       /*!< Reserved, 0x26                                                 */
+  __IO uint16_t TDR;         /*!< USART Transmit Data register,             Address offset: 0x28 */
+  uint16_t  RESERVED5;       /*!< Reserved, 0x2A                                                 */
+} USART_TypeDef;
+
+stm32l452xx.h (Source\System\inc) line 14768 : 
+
+/*******************  Bit definition for USART_TDR register  ******************/
+#define USART_TDR_TDR_Pos             (0U)
+#define USART_TDR_TDR_Msk             (0x1FFU << USART_TDR_TDR_Pos)            /*!< 0x000001FF */
+#define USART_TDR_TDR                 USART_TDR_TDR_Msk                        /*!< TDR[8:0] bits (Transmit Data value) */
+
+/******************************************************************************/
+/*                                                                            */
+HAL_IRDA_Transmit in stm32l4xx_hal_irda.c (Source\Kernel\Hal_Lib\Src) : 
+        tmp = (uint16_t*) pData;
+        hirda->Instance->TDR = (*tmp & (uint16_t)0x01FF);
+        pData += 2;
+      }
+      else
+      {
+        hirda->Instance->TDR = (*pData++ & (uint8_t)0xFF);
+      }
+    }
+
+HAL_IRDA_Transmit_DMA in stm32l4xx_hal_irda.c (Source\Kernel\Hal_Lib\Src) : 
+    /* Enable the IRDA transmit DMA channel */
+    HAL_DMA_Start_IT(hirda->hdmatx, (uint32_t)hirda->pTxBuffPtr, (uint32_t)&hirda->Instance->TDR, Size);
+
+    /* Clear the TC flag in the ICR register */
+    __HAL_IRDA_CLEAR_FLAG(hirda, IRDA_CLEAR_TCF);
+IRDA_Transmit_IT in stm32l4xx_hal_irda.c (Source\Kernel\Hal_Lib\Src) : 
+        tmp = (uint16_t*) hirda->pTxBuffPtr;
+        hirda->Instance->TDR = (*tmp & (uint16_t)0x01FF);
+        hirda->pTxBuffPtr += 2;
+      }
+      else
+      {
+        hirda->Instance->TDR = (uint8_t)(*hirda->pTxBuffPtr++ & (uint8_t)0xFF);
+      }
+      hirda->TxXferCount--;
+
+stm32l4xx_hal_smartcard.c (Source\Kernel\Hal_Lib\Src) line 497 : 
+  * @brief Send an amount of data in blocking mode.
+  * @note When FIFO mode is enabled, writing a data in the TDR register adds one 
+  *       data to the TXFIFO. Write operations to the TDR register are performed
+  *       when TXFNF flag is set. From hardware perspective, TXFNF flag and 
+  *       TXE are mapped on the same bit-field.
+  * @param hsmartcard Pointer to a SMARTCARD_HandleTypeDef structure that contains
+HAL_SMARTCARD_Transmit in stm32l4xx_hal_smartcard.c (Source\Kernel\Hal_Lib\Src) : 
+      }
+      hsmartcard->Instance->TDR = (*pData++ & (uint8_t)0xFF);
+    }
+    if(SMARTCARD_WaitOnFlagUntilTimeout(hsmartcard, SMARTCARD_TRANSMISSION_COMPLETION_FLAG(hsmartcard), RESET, tickstart, Timeout) != HAL_OK)
+    {
+stm32l4xx_hal_smartcard.c (Source\Kernel\Hal_Lib\Src) line 646 : 
+  * @note When FIFO mode is disabled, USART interrupt is generated whenever 
+  *       USART_TDR register is empty, i.e one interrupt per data to transmit.
+  * @note When FIFO mode is enabled, USART interrupt is generated whenever 
+  *       TXFIFO threshold reached. In that case the interrupt rate depends on
+  *       TXFIFO threshold configuration.
+HAL_SMARTCARD_Transmit_DMA in stm32l4xx_hal_smartcard.c (Source\Kernel\Hal_Lib\Src) : 
+    /* Enable the SMARTCARD transmit DMA channel */
+    HAL_DMA_Start_IT(hsmartcard->hdmatx, (uint32_t)hsmartcard->pTxBuffPtr, (uint32_t)&hsmartcard->Instance->TDR, Size);
+
+    /* Clear the TC flag in the ICR register */
+    CLEAR_BIT(hsmartcard->Instance->ICR, USART_ICR_TCCF);
+SMARTCARD_TxISR in stm32l4xx_hal_smartcard.c (Source\Kernel\Hal_Lib\Src) : 
+    {
+      hsmartcard->Instance->TDR = (*hsmartcard->pTxBuffPtr++ & (uint8_t)0xFF);
+      hsmartcard->TxXferCount--;
+    }
+  }
+SMARTCARD_TxISR_FIFOEN in stm32l4xx_hal_smartcard.c (Source\Kernel\Hal_Lib\Src) : 
+      {
+        hsmartcard->Instance->TDR = (*hsmartcard->pTxBuffPtr++ & (uint8_t)0xFF);
+        hsmartcard->TxXferCount--;
+      }
+    }
+HAL_SWPMI_Transmit in stm32l4xx_hal_swpmi.c (Source\Kernel\Hal_Lib\Src) : 
+        {
+          hswpmi->Instance->TDR = (*pData++);
+          Size--;
+        }
+        else
+HAL_SWPMI_Transmit_DMA in stm32l4xx_hal_swpmi.c (Source\Kernel\Hal_Lib\Src) : 
+      /* Enable the SWPMI transmit DMA Channel */
+      HAL_DMA_Start_IT(hswpmi->hdmatx, (uint32_t)hswpmi->pTxBuffPtr, (uint32_t)&hswpmi->Instance->TDR, Size);
+
+      /* Process Unlocked */
+      __HAL_UNLOCK(hswpmi);
+SWPMI_Transmit_IT in stm32l4xx_hal_swpmi.c (Source\Kernel\Hal_Lib\Src) : 
+    {
+      hswpmi->Instance->TDR = (uint32_t)(*hswpmi->pTxBuffPtr++);
+      hswpmi->TxXferCount--;
+    }
+  }
+stm32l4xx_hal_uart.c (Source\Kernel\Hal_Lib\Src) line 676 : 
+  * @brief Send an amount of data in blocking mode.
+  * @note When FIFO mode is enabled, writing a data in the TDR register adds one 
+  *       data to the TXFIFO. Write operations to the TDR register are performed
+  *       when TXFNF flag is set. From hardware perspective, TXFNF flag and 
+  *       TXE are mapped on the same bit-field.
+  * @param huart   UART handle.
+HAL_UART_Transmit in stm32l4xx_hal_uart.c (Source\Kernel\Hal_Lib\Src) : 
+        tmp = (uint16_t*) pData;
+        huart->Instance->TDR = (*tmp & (uint16_t)0x01FFU);
+        pData += 2U;
+      }
+      else
+      {
+        huart->Instance->TDR = (*pData++ & (uint8_t)0xFFU);
+      }
+      huart->TxXferCount--;
+    }
+HAL_UART_Transmit_DMA in stm32l4xx_hal_uart.c (Source\Kernel\Hal_Lib\Src) : 
+    /* Enable the UART transmit DMA channel */
+    HAL_DMA_Start_IT(huart->hdmatx, (uint32_t)huart->pTxBuffPtr, (uint32_t)&huart->Instance->TDR, Size);
+    
+    /* Clear the TC flag in the ICR register */
+    __HAL_UART_CLEAR_FLAG(huart, UART_CLEAR_TCF);
+UART_TxISR_8BIT in stm32l4xx_hal_uart.c (Source\Kernel\Hal_Lib\Src) : 
+    {
+      huart->Instance->TDR = (uint8_t)(*huart->pTxBuffPtr++ & (uint8_t)0xFF);
+      huart->TxXferCount--;
+    }
+  }
+UART_TxISR_16BIT in stm32l4xx_hal_uart.c (Source\Kernel\Hal_Lib\Src) : 
+      tmp = (uint16_t*) huart->pTxBuffPtr;
+      huart->Instance->TDR = (*tmp & (uint16_t)0x01FF);
+      huart->pTxBuffPtr += 2;
+      huart->TxXferCount--;
+    }
+UART_TxISR_8BIT_FIFOEN in stm32l4xx_hal_uart.c (Source\Kernel\Hal_Lib\Src) : 
+      {
+        huart->Instance->TDR = (uint8_t)(*huart->pTxBuffPtr++ & (uint8_t)0xFF);
+        huart->TxXferCount--;
+      }
+    }
+UART_TxISR_16BIT_FIFOEN in stm32l4xx_hal_uart.c (Source\Kernel\Hal_Lib\Src) : 
+        tmp = (uint16_t*) huart->pTxBuffPtr;
+        huart->Instance->TDR = (*tmp & (uint16_t)0x01FFU);
+        huart->pTxBuffPtr += 2U;
+        huart->TxXferCount--;        
+      }
+HAL_USART_Transmit in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+        tmp = (uint16_t*) pTxData;
+        husart->Instance->TDR = (*tmp & (uint16_t)0x01FF);
+        pTxData += 2;
+      }
+      else
+      {
+        husart->Instance->TDR = (*pTxData++ & (uint8_t)0xFF);
+      }
+      
+      husart->TxXferCount--;
+HAL_USART_Receive in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+        }
+        husart->Instance->TDR = (USART_DUMMY_DATA & (uint16_t)0x0FF);
+      }
+      
+      /* Wait for RXNE Flag */
+HAL_USART_TransmitReceive in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+        tmp = (uint16_t*) pTxData;
+        husart->Instance->TDR = (*tmp & uhMask);
+        pTxData += 2U;
+      }
+      else
+    {
+        husart->Instance->TDR = (*pTxData++ & (uint8_t)uhMask);
+      }
+
+      husart->TxXferCount--;
+HAL_USART_TransmitReceive in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+          tmp = (uint16_t*) pTxData;
+          husart->Instance->TDR = (*tmp & uhMask);
+          pTxData += 2;
+        }
+        else
+        {
+          husart->Instance->TDR = (*pTxData++ & (uint8_t)uhMask);
+        }
+        
+        husart->TxXferCount--;
+HAL_USART_Receive_IT in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+        {
+          husart->Instance->TDR = (USART_DUMMY_DATA & (uint16_t)0x00FF);
+        }
+      }
+      else
+HAL_USART_Receive_IT in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+      {
+        husart->Instance->TDR = (USART_DUMMY_DATA & (uint16_t)0x00FF);
+      }
+    }
+    
+HAL_USART_Transmit_DMA in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+    tmp = (uint32_t*)&pTxData;
+    HAL_DMA_Start_IT(husart->hdmatx, *(uint32_t*)tmp, (uint32_t)&husart->Instance->TDR, Size);
+
+    /* Clear the TC flag in the ICR register */
+    __HAL_USART_CLEAR_FLAG(husart, USART_CLEAR_TCF);
+HAL_USART_Receive_DMA in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+      husart->hdmatx->XferCpltCallback = NULL;
+      HAL_DMA_Start_IT(husart->hdmatx, *(uint32_t*)tmp, (uint32_t)&husart->Instance->TDR, Size);
+    }
+#endif
+    
+HAL_USART_TransmitReceive_DMA in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+    tmp = (uint32_t*)&pTxData;
+    HAL_DMA_Start_IT(husart->hdmatx, *(uint32_t*)tmp, (uint32_t)&husart->Instance->TDR, Size);
+
+    /* Process Unlocked */
+    __HAL_UNLOCK(husart);
+USART_TxISR_8BIT in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+    {
+      husart->Instance->TDR = (uint8_t)(*husart->pTxBuffPtr++ & (uint8_t)0xFF);
+      husart->TxXferCount--;
+    }
+  }
+USART_TxISR_16BIT in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+      tmp = (uint16_t*) husart->pTxBuffPtr;
+      husart->Instance->TDR = (*tmp & (uint16_t)0x01FF);
+      husart->pTxBuffPtr += 2;      
+      husart->TxXferCount--;
+    }
+USART_TxISR_8BIT_FIFOEN in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+      {
+        husart->Instance->TDR = (uint8_t)(*husart->pTxBuffPtr++ & (uint8_t)0xFF);
+        husart->TxXferCount--;
+      }
+    }   
+USART_TxISR_16BIT_FIFOEN in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+        tmp = (uint16_t*) husart->pTxBuffPtr;
+        husart->Instance->TDR = (*tmp & (uint16_t)0x01FF);
+        husart->pTxBuffPtr += 2;      
+        husart->TxXferCount--;
+      }
+USART_RxISR_8BIT in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+      /* Send dummy byte in order to generate the clock for the Slave to Send the next data */
+      husart->Instance->TDR = (USART_DUMMY_DATA & (uint16_t)0x00FF);
+    }    
+  }
+}
+USART_RxISR_16BIT in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+      /* Send dummy byte in order to generate the clock for the Slave to Send the next data */
+      husart->Instance->TDR = (USART_DUMMY_DATA & (uint16_t)0x00FF);
+    }
+  }
+}
+USART_RxISR_8BIT_FIFOEN in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+          /* Send dummy byte in order to generate the clock for the Slave to Send the next data */
+          husart->Instance->TDR = (USART_DUMMY_DATA & (uint16_t)0x00FF);
+        }
+      }
+    }
+USART_RxISR_8BIT_FIFOEN in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+        /* Send dummy byte in order to generate the clock for the Slave to Send the next data */
+        husart->Instance->TDR = (USART_DUMMY_DATA & (uint16_t)0x00FF);
+      }
+    }
+  }
+USART_RxISR_16BIT_FIFOEN in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+          /* Send dummy byte in order to generate the clock for the Slave to Send the next data */
+          husart->Instance->TDR = (USART_DUMMY_DATA & (uint16_t)0x00FF);
+        }
+      }
+    }
+USART_RxISR_16BIT_FIFOEN in stm32l4xx_hal_usart.c (Source\Kernel\Hal_Lib\Src) : 
+        /* Send dummy byte in order to generate the clock for the Slave to Send the next data */
+        husart->Instance->TDR = (USART_DUMMY_DATA & (uint16_t)0x00FF);
+      }
+    }
+  }
+stm32l4xx_ll_lpuart.h (Source\Kernel\Hal_Lib\Inc) line 2693 : 
+  * @rmtoll RDR          RDR           LL_LPUART_DMA_GetRegAddr\n
+  * @rmtoll TDR          TDR           LL_LPUART_DMA_GetRegAddr
+  * @param  LPUARTx LPUART Instance
+  * @param  Direction This parameter can be one of the following values:
+  *         @arg @ref LL_LPUART_DMA_REG_DATA_TRANSMIT
+LL_LPUART_DMA_GetRegAddr in stm32l4xx_ll_lpuart.h (Source\Kernel\Hal_Lib\Inc) : 
+  {
+    /* return address of TDR register */
+    data_reg_addr = (uint32_t) &(LPUARTx->TDR);
+  }
+  else
+  {
+stm32l4xx_ll_lpuart.h (Source\Kernel\Hal_Lib\Inc) line 2750 : 
+  * @brief  Write in Transmitter Data Register (Transmit Data value, 8 bits)
+  * @rmtoll TDR          TDR           LL_LPUART_TransmitData8
+  * @param  LPUARTx LPUART Instance
+  * @param  Value between Min_Data=0x00 and Max_Data=0xFF
+  * @retval None
+LL_LPUART_TransmitData8 in stm32l4xx_ll_lpuart.h (Source\Kernel\Hal_Lib\Inc) : 
+{
+  LPUARTx->TDR = Value;
+}
+
+/**
+  * @brief  Write in Transmitter Data Register (Transmit Data value, 9 bits)
+  * @rmtoll TDR          TDR           LL_LPUART_TransmitData9
+  * @param  LPUARTx LPUART Instance
+  * @param  Value between Min_Data=0x00 and Max_Data=0x1FF
+  * @retval None
+LL_LPUART_TransmitData9 in stm32l4xx_ll_lpuart.h (Source\Kernel\Hal_Lib\Inc) : 
+{
+  LPUARTx->TDR = Value & 0x1FFU;
+}
+
+/**
+stm32l4xx_ll_swpmi.h (Source\Kernel\Hal_Lib\Inc) line 522 : 
+  * @brief  Check if Transmit data register is empty (it means that Data written in transmit
+  *         data register SWPMI_TDR has been transmitted and SWPMI_TDR can be written to again)
+  * @rmtoll ISR          TXE           LL_SWPMI_IsActiveFlag_TXE
+  * @param  SWPMIx SWPMI Instance
+  * @retval State of bit (1 or 0).
+stm32l4xx_ll_swpmi.h (Source\Kernel\Hal_Lib\Inc) line 1036 : 
+  * @brief  Get the data register address used for DMA transfer
+  * @rmtoll TDR          TD            LL_SWPMI_DMA_GetRegAddr\n
+  *         RDR          RD            LL_SWPMI_DMA_GetRegAddr
+  * @param  SWPMIx SWPMI Instance
+  * @param  Direction This parameter can be one of the following values:
+LL_SWPMI_DMA_GetRegAddr in stm32l4xx_ll_swpmi.h (Source\Kernel\Hal_Lib\Inc) : 
+  {
+    /* return address of TDR register */
+    data_reg_addr = (uint32_t)&(SWPMIx->TDR);
+  }
+  else
+  {
+stm32l4xx_ll_swpmi.h (Source\Kernel\Hal_Lib\Inc) line 1083 : 
+  * @brief  Transmit Data Register
+  * @rmtoll TDR          TD            LL_SWPMI_TransmitData32
+  * @param  SWPMIx SWPMI Instance
+  * @param  TxData Value between Min_Data=0x00000000 and Max_Data=0xFFFFFFFF
+  * @retval None
+LL_SWPMI_TransmitData32 in stm32l4xx_ll_swpmi.h (Source\Kernel\Hal_Lib\Inc) : 
+{
+  WRITE_REG(SWPMIx->TDR, TxData);
+}
+
+/**
+stm32l4xx_ll_usart.h (Source\Kernel\Hal_Lib\Inc) line 4481 : 
+  * @rmtoll RDR          RDR           LL_USART_DMA_GetRegAddr\n
+  * @rmtoll TDR          TDR           LL_USART_DMA_GetRegAddr
+  * @param  USARTx USART Instance
+  * @param  Direction This parameter can be one of the following values:
+  *         @arg @ref LL_USART_DMA_REG_DATA_TRANSMIT
+LL_USART_DMA_GetRegAddr in stm32l4xx_ll_usart.h (Source\Kernel\Hal_Lib\Inc) : 
+  {
+    /* return address of TDR register */
+    data_reg_addr = (uint32_t) &(USARTx->TDR);
+  }
+  else
+  {
+stm32l4xx_ll_usart.h (Source\Kernel\Hal_Lib\Inc) line 4538 : 
+  * @brief  Write in Transmitter Data Register (Transmit Data value, 8 bits)
+  * @rmtoll TDR          TDR           LL_USART_TransmitData8
+  * @param  USARTx USART Instance
+  * @param  Value between Min_Data=0x00 and Max_Data=0xFF
+  * @retval None
+LL_USART_TransmitData8 in stm32l4xx_ll_usart.h (Source\Kernel\Hal_Lib\Inc) : 
+{
+  USARTx->TDR = Value;
+}
+
+/**
+  * @brief  Write in Transmitter Data Register (Transmit Data value, 9 bits)
+  * @rmtoll TDR          TDR           LL_USART_TransmitData9
+  * @param  USARTx USART Instance
+  * @param  Value between Min_Data=0x00 and Max_Data=0x1FF
+  * @retval None
+LL_USART_TransmitData9 in stm32l4xx_ll_usart.h (Source\Kernel\Hal_Lib\Inc) : 
+{
+  USARTx->TDR = Value & 0x1FFU;
+}
+
+/**
+uart1_output in usart.c (Source\Hardware\src) : 
+		while((USART1->ISR & USART_FLAG_TC) == (uint16_t)RESET){};		//获取传输完成标志TC transmission complete
+		USART1->TDR = (buf[__i] & (uint16_t)0x01FF);// USART_SendData(USART1,(uint8_t) buf[__i]);
+    }
+}
+

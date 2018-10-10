@@ -1,0 +1,47 @@
+#include "timer.h"
+#include "esp8266.h"
+
+#define user_wifi_printf(fmt, args...) 	do{uart2_printf(fmt,##args);}while(0)	//∑¢ÀÕAT÷∏¡Ó
+#define WIFI_AT_ENDSTR 					("\r\n")
+
+Pipe1_t *user_wifi_recv_pipe=NULL;
+
+
+void user_wifi_init(void)
+{
+	esp8266_hardware_init();
+	
+	
+}
+
+
+static void user_wifi_loop(void)
+{
+	static unsigned int softimersec=0xffffffff;
+    if(softimersec==Get_SysTick())return;
+    softimersec=Get_SysTick();
+	
+	
+}
+
+static void user_wifi_AT_loop(void)
+{
+
+}
+
+static void user_wifi_parse_AT_loop(void)
+{
+	
+}
+
+void user_wifi_task(void)
+{
+	user_wifi_loop();
+	user_wifi_parse_AT_loop();
+	user_wifi_AT_loop();
+}
+
+
+
+
+
